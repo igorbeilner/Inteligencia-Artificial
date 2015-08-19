@@ -87,7 +87,7 @@ void learning(float attributesMatrix[MAX][N_ATTRIBUTES], float kohonenMap[L_TOPO
 			collaborativeFase(kohonenMap, similarNeuron[0], similarNeuron[1], learningRate, attributesMatrix[i], neighbors);
 		}
 		*learningRate = N0 * (1 - (float)((float)j/(float)(T-1)));
-		*neighbors = (D0 * (1 - (float)((float)j/(float)(T-1))))+0.9;
+		*neighbors = (D0 * (1 - (float)((float)j/(float)(T-1))))+0.999999;
 	}
 }
 
@@ -108,13 +108,27 @@ void showKohonenMap(float kohonenMap[L_TOPOLOGY][C_TOPOLOGY][N_ATTRIBUTES]) {
 }
 
 void application(float kohonenMap[L_TOPOLOGY][C_TOPOLOGY][N_ATTRIBUTES], float attributesMatrix[MAX][N_ATTRIBUTES]) {
-	int similarNeuron[2] = {0, 0}, i;
-	for(i=0; i<MAX; i++) {
-		if(i == 57) printf("\n");
-		competitiveFase(kohonenMap, attributesMatrix[i], similarNeuron);
-		printf("[%d,%d] ", similarNeuron[0], similarNeuron[1]);
+	int similarNeuron[2] = {0, 0}, i, j;
+	char cognition[L_TOPOLOGY][C_TOPOLOGY], flag;
+	for(i=0; i<L_TOPOLOGY; i++) {
+		for(j=0; j<C_TOPOLOGY; j++) {
+			cognition[i][j] = '-';
+		}
 	}
-	printf("\n");
+	for(i=0; i<MAX; i++) {
+		competitiveFase(kohonenMap, attributesMatrix[i], similarNeuron);
+		if(i < 74) flag = 'S';
+		else flag = 'R';
+		cognition[similarNeuron[0]][similarNeuron[1]] = flag;
+		//printf("[%d,%d] ", similarNeuron[0], similarNeuron[1]);
+	}
+	for(i=0; i<L_TOPOLOGY; i++) {
+		printf("\n\t\t\t\t");
+		for(j=0; j<C_TOPOLOGY; j++) {
+			printf(" %c", cognition[i][j]);
+		}
+	}
+	printf("\n\n\n\n\n\n\n");
 }
 
 int main() {
@@ -155,9 +169,9 @@ int main() {
 
 	srandom(time(NULL));
 	rateInit(kohonenMap, &learningRate, &neighbors);
-	showKohonenMap(kohonenMap);
+	//showKohonenMap(kohonenMap);
 	learning(attributesMatrix, kohonenMap, &learningRate, &neighbors);
-	showKohonenMap(kohonenMap);
+	//showKohonenMap(kohonenMap);
 	application(kohonenMap, attributesMatrix);
 
 	return 0;
