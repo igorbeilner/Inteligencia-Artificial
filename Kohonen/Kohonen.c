@@ -6,8 +6,8 @@
 #define MAX 131					/* numero maximo de ponto */
 #define w1 0.3					/* ponderacao para o atributo iluminacao */
 #define w2 0.7					/* ponderacao para o atributo largura */
-#define C_TOPOLOGY 4			/* numero de colunas do mapa */
-#define L_TOPOLOGY 4			/* numero de linhas do mapa */
+#define C_TOPOLOGY 16			/* numero de colunas do mapa */
+#define L_TOPOLOGY 16			/* numero de linhas do mapa */
 #define EUCLIDEANDISTANCE(x0,y0,x1,y1) sqrt(w1*pow(x1-x0,2)+w2*pow(y1-y0,2))	/* calculo da distancia euclidiana */
 #define N_ATTRIBUTES 2			/* quantidade de atributos */
 #define T 131					/* numero de iteracoes para treinamento da rede */
@@ -93,7 +93,6 @@ void learning(float attributesMatrix[MAX][N_ATTRIBUTES], float kohonenMap[L_TOPO
 
 void showKohonenMap(float kohonenMap[L_TOPOLOGY][C_TOPOLOGY][N_ATTRIBUTES]) {
 	int i, j;
-	//printf("|-----------------------------------|\n");
 	for(i=0; i<L_TOPOLOGY; i++) {
 		for(j=0; j<C_TOPOLOGY; j++)
 			printf(" %f", kohonenMap[i][j][0]);
@@ -105,22 +104,21 @@ void showKohonenMap(float kohonenMap[L_TOPOLOGY][C_TOPOLOGY][N_ATTRIBUTES]) {
 			printf(" %f", kohonenMap[i][j][1]);
 		printf("\n");
 	}
-	//printf("|-----------------------------------|\n");
-	//printf("\n");
+	printf("\n");
 }
 
 void application(float kohonenMap[L_TOPOLOGY][C_TOPOLOGY][N_ATTRIBUTES], float attributesMatrix[MAX][N_ATTRIBUTES]) {
 	int similarNeuron[2] = {0, 0}, i;
 	for(i=0; i<MAX; i++) {
-		//if(i == 57) printf("\n---\n");
+		if(i == 57) printf("\n");
 		competitiveFase(kohonenMap, attributesMatrix[i], similarNeuron);
-		//printf("%d - [%d , %d]\n", i+1, similarNeuron[0], similarNeuron[1]);
+		printf("[%d,%d] ", similarNeuron[0], similarNeuron[1]);
 	}
-
+	printf("\n");
 }
 
 int main() {
-	float attributesMatrix[MAX][N_ATTRIBUTES] = {
+	float attributesMatrix[MAX][N_ATTRIBUTES] = {		/******* SALMAO ********/
 		{1.58, 14.6},	{1.2 , 15.2},	{1.58, 16.4},	{1.2 , 17.4},	{1.1 , 18.6},	{1.2 , 19.8},
 		{0.8 , 20.7},	{1.2 , 21.4},	{1.4 , 21.0},	{1.4 , 18.2},	{1.5 , 21.1},	{1.6 , 20.0},
 		{1.6 , 19.3},	{2.0 , 16.0},	{2.0 , 16.8},	{2.0 , 17.4},	{2.0 , 18.4},	{2.0 , 20.0},
@@ -146,13 +144,18 @@ int main() {
 		{7.5 , 20.4},	{8.0 , 19.6},	{8.4 , 19.6},	{8.4 , 19.8},	{8.1 , 20.6},	{7.8 , 21.6},
 		{9.0 , 18.6},	{10.0, 20.2},	{10.2, 17.0}
 	};
-	float 	kohonenMap[L_TOPOLOGY][C_TOPOLOGY][N_ATTRIBUTES];
+	float 	kohonenMap[L_TOPOLOGY][C_TOPOLOGY][N_ATTRIBUTES];/* = {
+		{ {3.036612, 20.282764}, {5.384319, 20.453667}, {6.858189, 20.423548}, {7.806494, 19.801142} },
+		{ {2.333054, 19.957819}, {4.070303, 19.510410}, {6.324040, 19.271618}, {7.734942, 18.759115} },
+		{ {2.391735, 18.930984}, {3.627042, 17.993908}, {5.630729, 17.568308}, {7.563746, 17.676374} },
+		{ {2.628274, 17.257336}, {3.336997, 16.261267}, {5.031539, 16.082054}, {7.065407, 16.316362} },
+	};*/
 	float 	learningRate;
 	int 	neighbors;
 
 	srandom(time(NULL));
 	rateInit(kohonenMap, &learningRate, &neighbors);
-	//showKohonenMap(kohonenMap);
+	showKohonenMap(kohonenMap);
 	learning(attributesMatrix, kohonenMap, &learningRate, &neighbors);
 	showKohonenMap(kohonenMap);
 	application(kohonenMap, attributesMatrix);
