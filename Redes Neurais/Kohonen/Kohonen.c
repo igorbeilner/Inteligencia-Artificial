@@ -8,7 +8,7 @@
 #define w2 0.7					/* ponderacao para o atributo largura */
 #define C_TOPOLOGY 16			/* numero de colunas do mapa */
 #define L_TOPOLOGY 16			/* numero de linhas do mapa */
-#define EUCLIDEANDISTANCE(x0,y0,x1,y1) sqrt(w1*pow(x1-x0,2)+w2*pow(y1-y0,2))	/* calculo da distancia euclidiana */
+#define EUCLIDEANDISTANCE(x0,y0,x1,y1) sqrt(w1*pow(x1-x0,2)+w2*pow(y1-y0,2))	/* macro para calculo da distancia euclidiana */
 #define N_ATTRIBUTES 2			/* quantidade de atributos */
 #define T 131					/* numero de iteracoes para treinamento da rede */
 #define MYRAND ((float)(random())/(float)(RAND_MAX) ) 		/* macro MYRAND: gera numeros float entre 0 e 1 */
