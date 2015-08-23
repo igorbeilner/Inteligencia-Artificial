@@ -6,8 +6,8 @@
 #define MAX 131					/* numero maximo de ponto */
 #define w1 0.3					/* ponderacao para o atributo iluminacao */
 #define w2 0.7					/* ponderacao para o atributo largura */
-#define C_TOPOLOGY 16			/* numero de colunas do mapa */
-#define L_TOPOLOGY 16			/* numero de linhas do mapa */
+#define C_TOPOLOGY 64			/* numero de colunas do mapa */
+#define L_TOPOLOGY 8			/* numero de linhas do mapa */
 #define EUCLIDEANDISTANCE(x0,y0,x1,y1) sqrt(w1*pow(x1-x0,2)+w2*pow(y1-y0,2))	/* macro para calculo da distancia euclidiana */
 #define N_ATTRIBUTES 2			/* quantidade de atributos */
 #define T 131					/* numero de iteracoes para treinamento da rede */
@@ -108,7 +108,7 @@ void showKohonenMap(float kohonenMap[L_TOPOLOGY][C_TOPOLOGY][N_ATTRIBUTES]) {
 }
 
 void application(float kohonenMap[L_TOPOLOGY][C_TOPOLOGY][N_ATTRIBUTES], float attributesMatrix[MAX][N_ATTRIBUTES]) {
-	int similarNeuron[2] = {0, 0}, i, j;
+	int similarNeuron[2] = {0, 0}, i, j;//, o=3;
 	char cognition[L_TOPOLOGY][C_TOPOLOGY], flag;
 	for(i=0; i<L_TOPOLOGY; i++) {
 		for(j=0; j<C_TOPOLOGY; j++) {
@@ -117,13 +117,14 @@ void application(float kohonenMap[L_TOPOLOGY][C_TOPOLOGY][N_ATTRIBUTES], float a
 	}
 	for(i=0; i<MAX; i++) {
 		competitiveFase(kohonenMap, attributesMatrix[i], similarNeuron);
-		if(i < 74) flag = 'S';
-		else flag = 'R';
+		if(i < 74 && cognition[similarNeuron[0]][similarNeuron[1]] == '-') 	flag = 'S';
+		else if(cognition[similarNeuron[0]][similarNeuron[1]] == '-') 		flag = 'R';
+		else flag = 'T';//o++;
 		cognition[similarNeuron[0]][similarNeuron[1]] = flag;
 		//printf("[%d,%d] ", similarNeuron[0], similarNeuron[1]);
 	}
 	for(i=0; i<L_TOPOLOGY; i++) {
-		printf("\n\t\t\t\t");
+		printf("\n\t");
 		for(j=0; j<C_TOPOLOGY; j++) {
 			printf(" %c", cognition[i][j]);
 		}
