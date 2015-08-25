@@ -52,7 +52,7 @@ int main() {					/******** SALMAO *********/
 		{7.5 , 20.4},	{8.0 , 19.6},	{8.4 , 19.6},	{8.4 , 19.8},	{8.1 , 20.6},	{7.8 , 21.6},
 		{9.0 , 18.6},	{10.0, 20.2},	{10.2, 17.0}};
 
-	int i, cont1, cont2;
+	int i, j, cont1, cont2;
 	char M[MAX], N, flag, aux=0;
 	float centroide[K][2] = {{1.58, 14.6},	{1.2 , 15.2}};
 
@@ -113,6 +113,22 @@ int main() {					/******** SALMAO *********/
 		printf("%d ", M[i]);
 	}
 	printf("\n");
+
+	for(j=0; j<2; j++) {
+		if(!j) printf("ROBALO:\n");
+		else printf("SALMAO:\n");
+		for(i=0; i<MAX; i++)
+			if(M[i] == j)
+				printf(" %f,", fish[i][0]);
+
+		printf("\n\n\n");
+
+		for(i=0; i<MAX; i++)
+			if(M[i] == j)
+				printf(" %f,", fish[i][1]);
+
+		printf("\n");
+	}
 
 	return 0;
 }

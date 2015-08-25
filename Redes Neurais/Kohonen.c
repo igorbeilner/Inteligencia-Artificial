@@ -6,7 +6,7 @@
 #define MAX 131					/* numero maximo de ponto */
 #define w1 0.3					/* ponderacao para o atributo iluminacao */
 #define w2 0.7					/* ponderacao para o atributo largura */
-#define C_TOPOLOGY 64			/* numero de colunas do mapa */
+#define C_TOPOLOGY 8			/* numero de colunas do mapa */
 #define L_TOPOLOGY 8			/* numero de linhas do mapa */
 #define EUCLIDEANDISTANCE(x0,y0,x1,y1) sqrt(w1*pow(x1-x0,2)+w2*pow(y1-y0,2))	/* macro para calculo da distancia euclidiana */
 #define N_ATTRIBUTES 2			/* quantidade de atributos */
@@ -15,22 +15,46 @@
 #define N0 0.3					/* valor do aprendizado inicial */
 #define D0 L_TOPOLOGY/2			/* valor da vizinhanca inicial */
 
-void rateInit(float kohonenMap[L_TOPOLOGY][C_TOPOLOGY][N_ATTRIBUTES], float *learningRate, int *neighbors);
-void competitiveFase(float kohonenMap[L_TOPOLOGY][C_TOPOLOGY][N_ATTRIBUTES], float attributes[], int similarNeuron[]);
-void collaborativeFase(float kohonenMap[L_TOPOLOGY][C_TOPOLOGY][N_ATTRIBUTES], int i, int j, float *learningRate, float attVet[], int *neighbors);
-void learning(float attributesMatrix[MAX][N_ATTRIBUTES], float kohonenMap[L_TOPOLOGY][C_TOPOLOGY][N_ATTRIBUTES], float *learningRate, int *neighbors);
-void application(float kohonenMap[L_TOPOLOGY][C_TOPOLOGY][N_ATTRIBUTES], float attributesMatrix[MAX][N_ATTRIBUTES]);
+void rateInit			(float kohonenMap[L_TOPOLOGY][C_TOPOLOGY][N_ATTRIBUTES], float *learningRate, int *neighbors);
+void showKohonenMap		(float kohonenMap[L_TOPOLOGY][C_TOPOLOGY][N_ATTRIBUTES]);
+void competitiveFase	(float kohonenMap[L_TOPOLOGY][C_TOPOLOGY][N_ATTRIBUTES], float attributes[], int similarNeuron[]);
+void collaborativeFase 	(float kohonenMap[L_TOPOLOGY][C_TOPOLOGY][N_ATTRIBUTES], int i, int j, float *learningRate, float attVet[], int *neighbors);
+void learning 			(float kohonenMap[L_TOPOLOGY][C_TOPOLOGY][N_ATTRIBUTES], float attributesMatrix[MAX][N_ATTRIBUTES], float *learningRate, int *neighbors);
+void application 		(float kohonenMap[L_TOPOLOGY][C_TOPOLOGY][N_ATTRIBUTES], float attributesMatrix[MAX][N_ATTRIBUTES]);
+void showPoints(float attributesMatrix[MAX][N_ATTRIBUTES], char type[]);
 
 void rateInit(float kohonenMap[L_TOPOLOGY][C_TOPOLOGY][N_ATTRIBUTES], float *learningRate, int *neighbors) {			/* inicializa os pesos do mapa */
 	int i, j;
+
 	for(i=0; i<L_TOPOLOGY; i++) {
 		for(j=0; j<C_TOPOLOGY; j++) {
-			kohonenMap[i][j][0] = MYRAND;	/* inicializa atributo iluminacao */
-			kohonenMap[i][j][1] = MYRAND;	/* inicializa atributo largura */
+			kohonenMap[i][j][0] = 0.7;//MYRAND;	/* inicializa atributo iluminacao */
+			kohonenMap[i][j][1] = 0.7;//MYRAND;	/* inicializa atributo largura */
 		}
 	}
+
 	*learningRate = N0;						/* inicializa a taxa de aprendizado */
 	*neighbors 	  = D0;						/* inicializa a vizinhanca */
+}
+
+void showKohonenMap(float kohonenMap[L_TOPOLOGY][C_TOPOLOGY][N_ATTRIBUTES]) {
+	int i, j;
+
+	for(i=0; i<L_TOPOLOGY; i++) {
+		for(j=0; j<C_TOPOLOGY; j++)
+			printf(" %f", kohonenMap[i][j][0]);
+		printf("\n");
+	}
+
+	printf("\n");
+
+	for(i=0; i<L_TOPOLOGY; i++) {
+		for(j=0; j<C_TOPOLOGY; j++)
+			printf(" %f", kohonenMap[i][j][1]);
+		printf("\n");
+	}
+
+	printf("\n");
 }
 
 void competitiveFase(float kohonenMap[L_TOPOLOGY][C_TOPOLOGY][N_ATTRIBUTES], float attributes[], int similarNeuron[]) {
@@ -78,58 +102,88 @@ void collaborativeFase(float kohonenMap[L_TOPOLOGY][C_TOPOLOGY][N_ATTRIBUTES], i
 	}
 }
 
-void learning(float attributesMatrix[MAX][N_ATTRIBUTES], float kohonenMap[L_TOPOLOGY][C_TOPOLOGY][N_ATTRIBUTES], float *learningRate, int *neighbors) {
+void learning(float kohonenMap[L_TOPOLOGY][C_TOPOLOGY][N_ATTRIBUTES], float attributesMatrix[MAX][N_ATTRIBUTES], float *learningRate, int *neighbors) {
 	int j, i, similarNeuron[2] = {0, 0};		/* posicao do neuronio mais similar na mapa */
+
 	for(j=0; j<T; j++) {
 		for(i=0; i<T; i++) {
 			competitiveFase(kohonenMap, attributesMatrix[i], similarNeuron);
-			//printf("%d - [%d - %d]\n", i+1, similarNeuron[0], similarNeuron[1]);
 			collaborativeFase(kohonenMap, similarNeuron[0], similarNeuron[1], learningRate, attributesMatrix[i], neighbors);
 		}
-		*learningRate = N0 * (1 - (float)((float)j/(float)(T-1)));
-		*neighbors = (D0 * (1 - (float)((float)j/(float)(T-1))))+0.999999;
-	}
-}
 
-void showKohonenMap(float kohonenMap[L_TOPOLOGY][C_TOPOLOGY][N_ATTRIBUTES]) {
-	int i, j;
-	for(i=0; i<L_TOPOLOGY; i++) {
-		for(j=0; j<C_TOPOLOGY; j++)
-			printf(" %f", kohonenMap[i][j][0]);
-		printf("\n");
+		*learningRate 	= (N0 * (1 - (float)((float)j/(float)(T-1))));
+		*neighbors 		= (D0 * (1 - (float)((float)j/(float)(T-1))))+0.999999;
 	}
-	printf("\n");
-	for(i=0; i<L_TOPOLOGY; i++) {
-		for(j=0; j<C_TOPOLOGY; j++)
-			printf(" %f", kohonenMap[i][j][1]);
-		printf("\n");
-	}
-	printf("\n");
 }
 
 void application(float kohonenMap[L_TOPOLOGY][C_TOPOLOGY][N_ATTRIBUTES], float attributesMatrix[MAX][N_ATTRIBUTES]) {
-	int similarNeuron[2] = {0, 0}, i, j;//, o=3;
-	char cognition[L_TOPOLOGY][C_TOPOLOGY], flag;
+	int similarNeuron[2] = {0, 0}, i, j;
+	char recognizer[L_TOPOLOGY][C_TOPOLOGY], type[MAX];
+
 	for(i=0; i<L_TOPOLOGY; i++) {
 		for(j=0; j<C_TOPOLOGY; j++) {
-			cognition[i][j] = '-';
+			recognizer[i][j] = '-';			/* Inicializacao do reconecedor */
 		}
 	}
+
 	for(i=0; i<MAX; i++) {
 		competitiveFase(kohonenMap, attributesMatrix[i], similarNeuron);
-		if(i < 74 && cognition[similarNeuron[0]][similarNeuron[1]] == '-') 	flag = 'S';
-		else if(cognition[similarNeuron[0]][similarNeuron[1]] == '-') 		flag = 'R';
-		else flag = 'T';//o++;
-		cognition[similarNeuron[0]][similarNeuron[1]] = flag;
-		//printf("[%d,%d] ", similarNeuron[0], similarNeuron[1]);
-	}
-	for(i=0; i<L_TOPOLOGY; i++) {
-		printf("\n\t");
-		for(j=0; j<C_TOPOLOGY; j++) {
-			printf(" %c", cognition[i][j]);
+		if(i < 74 && (recognizer[similarNeuron[0]][similarNeuron[1]] == '-' || recognizer[similarNeuron[0]][similarNeuron[1]] == 'S')) 	{
+			recognizer[similarNeuron[0]][similarNeuron[1]] = 'S';		/* Area de reconhecimento de salmao */
+			type[i] = 0;
+		}
+		else if(recognizer[similarNeuron[0]][similarNeuron[1]] == '-' || recognizer[similarNeuron[0]][similarNeuron[1]] == 'R') {
+			recognizer[similarNeuron[0]][similarNeuron[1]] = 'R';		/* Area de reconhecimento de robalo */
+			type[i] = 1;
+		}
+		else {
+			recognizer[similarNeuron[0]][similarNeuron[1]] = 'T';		/* Area onde nao se sabe o tipo de peixe */
+			type[i] = 2;
 		}
 	}
-	printf("\n\n\n\n\n\n\n");
+
+	for(i=0; i<L_TOPOLOGY; i++) {		/* Impressao do mapa de reconhecimento*/
+		printf("\n\t");
+		for(j=0; j<C_TOPOLOGY; j++) {
+			printf(" %c", recognizer[i][j]);
+		}
+	}
+	printf("\n");
+	showPoints(attributesMatrix, type);
+}
+
+void showPoints(float attributesMatrix[MAX][N_ATTRIBUTES], char type[]) {
+	int i, j, flag;
+	for(j=0; j<3; j++) {
+
+		if 		(j==0) 	printf("\nsalmaox = [");
+		else if (j==1) 	printf("\nrobalox = [");
+		else 			printf("\nnaoseix = [");
+
+		flag=0;
+		for(i=0; i<MAX; i++) {
+			if(type[i] == j) {
+				if(flag) printf(", ");
+				printf("%f", attributesMatrix[i][0]);
+				flag=1;
+			}
+		}
+		printf("]\n");
+
+		if 		(j==0) 	printf("\nsalmaoy = [");
+		else if (j==1) 	printf("\nrobaloy = [");
+		else 			printf("\nnaoseiy = [");
+
+		flag=0;
+		for(i=0; i<MAX; i++) {
+			if(type[i] == j) {
+				if(flag) printf(", ");
+				printf("%f", attributesMatrix[i][1]);
+				flag=1;
+			}
+		}
+		printf("]\n");
+	}
 }
 
 int main() {
@@ -171,7 +225,7 @@ int main() {
 	srandom(time(NULL));
 	rateInit(kohonenMap, &learningRate, &neighbors);
 	//showKohonenMap(kohonenMap);
-	learning(attributesMatrix, kohonenMap, &learningRate, &neighbors);
+	learning(kohonenMap, attributesMatrix, &learningRate, &neighbors);
 	//showKohonenMap(kohonenMap);
 	application(kohonenMap, attributesMatrix);
 

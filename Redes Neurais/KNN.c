@@ -52,7 +52,7 @@ int main() {					/******** SALMAO *********/
 		{7.5 , 20.4},	{8.0 , 19.6},	{8.4 , 19.6},	{8.4 , 19.8},	{8.1 , 20.6},	{7.8 , 21.6},
 		{9.0 , 18.6},	{10.0, 20.2},	{10.2, 17.0}};
 
-	int i, qtdRobalo=0, qtdSalmao=0, type[MAX], eR=0, eS=0;
+	int i, j, qtdRobalo=0, qtdSalmao=0, type[MAX], eR=0, eS=0;
 	for(i=0; i<MAX; i++) {
 		type[i] = typefish(fish[i]);
 		if(type[i] == SEABASS) qtdRobalo++;
@@ -71,6 +71,22 @@ int main() {					/******** SALMAO *********/
 	printf("%d - ROBALOS\n", qtdRobalo);
 	printf("%d - ERRO SALMAO\n", eS);
 	printf("%d - ERRO ROBALO\n", eR);
+
+	for(j=0; j<2; j++) {
+		if(!j) printf("SALMAO:\n");
+		else printf("ROBALO:\n");
+		for(i=0; i<MAX; i++)
+			if(type[i] == j)
+				printf(" %f,", fish[i][0]);
+
+		printf("\n\n\n");
+
+		for(i=0; i<MAX; i++)
+			if(type[i] == j)
+				printf(" %f,", fish[i][1]);
+
+		printf("\n");
+	}
 
 	return 0;
 }
