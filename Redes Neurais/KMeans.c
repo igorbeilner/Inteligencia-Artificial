@@ -104,6 +104,9 @@ int main() {					/******** SALMAO *********/
 		if(!flag || aux > 100) break;
 	}
 
+	printf("centroide salmao: [%f, %f]\n", centroide[0][0], centroide[0][1]);
+	printf("centroide robalo: [%f, %f]\n", centroide[1][0], centroide[1][1]);
+
 	if(cont1 > cont2)
 		printf("%d - SALMOES\n%d - ROBALOS\n", cont1, cont2);
 	else
@@ -115,19 +118,34 @@ int main() {					/******** SALMAO *********/
 	printf("\n");
 
 	for(j=0; j<2; j++) {
-		if(!j) printf("ROBALO:\n");
-		else printf("SALMAO:\n");
-		for(i=0; i<MAX; i++)
-			if(M[i] == j)
-				printf(" %f,", fish[i][0]);
 
-		printf("\n\n\n");
+		if 		(j==0) 	printf("\nsalmaox = [");
+		else if (j==1) 	printf("\nrobalox = [");
+		else 			printf("\nnaoseix = [");
 
-		for(i=0; i<MAX; i++)
-			if(M[i] == j)
-				printf(" %f,", fish[i][1]);
+		flag=0;
+		for(i=0; i<MAX; i++) {
+			if(M[i] == j) {
+				if(flag) printf(", ");
+				printf("%f", fish[i][0]);
+				flag=1;
+			}
+		}
+		printf("]\n");
 
-		printf("\n");
+		if 		(j==0) 	printf("\nsalmaoy = [");
+		else if (j==1) 	printf("\nrobaloy = [");
+		else 			printf("\nnaoseiy = [");
+
+		flag=0;
+		for(i=0; i<MAX; i++) {
+			if(M[i] == j) {
+				if(flag) printf(", ");
+				printf("%f", fish[i][1]);
+				flag=1;
+			}
+		}
+		printf("]\n");
 	}
 
 	return 0;

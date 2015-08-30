@@ -1,9 +1,41 @@
-3.036612 5.384319 6.858189 7.806494
-2.333054 4.070303 6.324040 7.734942
-2.391735 3.627042 5.630729 7.563746
-2.628274 3.336997 5.031539 7.065407
+4x4:
+94 - salmoes
+37 - robalos
+0 - erro robalo
+20 - robalos
 
-20.282764 20.453667 20.423548 19.801142
-19.957819 19.510410 19.271618 18.759115
-18.930984 17.993908 17.568308 17.676374
-17.257336 16.261267 16.082054 16.316362
+8x8:
+80 - salmoes
+51 - robalos
+0 - erro robalo
+6 - robalos
+
+16x16:
+76 - salmoes
+55 - robalos
+0 - erro robalo
+2 - robalos
+
+32x32:
+75 - salmoes
+56 - robalos
+0 - erro robalo
+1 - robalos
+
+64x64:
+75 - salmoes
+56 - robalos
+0 - erro robalo
+1 - robalos
+
+KNN:
+72 - SALMOES
+59 - ROBALOS
+5 - ERRO SALMAO
+4 - ERRO ROBALO
+
+K-Means:
+72 - SALMOES
+59 - ROBALOS
+5 - ERRO SALMAO
+4 - ERRO ROBALO
