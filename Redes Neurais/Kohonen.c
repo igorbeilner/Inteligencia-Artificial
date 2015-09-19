@@ -6,8 +6,8 @@
 #define MAX 131					/* numero maximo de ponto */
 #define w1 0.3					/* ponderacao para o atributo iluminacao */
 #define w2 0.7					/* ponderacao para o atributo largura */
-#define C_TOPOLOGY 4			/* numero de colunas do mapa */
-#define L_TOPOLOGY 4			/* numero de linhas do mapa */
+#define C_TOPOLOGY 8			/* numero de colunas do mapa */
+#define L_TOPOLOGY 8			/* numero de linhas do mapa */
 #define EUCLIDEANDISTANCE(x0,y0,x1,y1) sqrt(w1*pow(x1-x0,2)+w2*pow(y1-y0,2))	/* macro para calculo da distancia euclidiana */
 #define N_ATTRIBUTES 2			/* quantidade de atributos */
 #define T 60					/* numero de iteracoes para treinamento da rede */
