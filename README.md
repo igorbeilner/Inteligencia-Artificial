@@ -4,8 +4,12 @@
 
 <i>Implementação dos seguintes métodos de redes neurais:</i>
 
-	<i>KNN;</i>
-	<i>K-Means;</i>
-	<i>Redes de Kohonen.</i>
+	KNN;
+	K-Means;
+	Redes de Kohonen.
 
-<i>Implementação de filtros de média, moda e mediana em imagens em tons de cinza</i>
+<i>Implementação ddos seguintes filtros em imagens em tons de cinza</i>
+
+	Média;
+	Moda;
+	Mediana;
