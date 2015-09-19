@@ -12,4 +12,4 @@
 
 	Média;
 	Moda;
-	Mediana;
+	Mediana.
