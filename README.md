@@ -8,7 +8,7 @@
 	K-Means;
 	Redes de Kohonen.
 
-<i>Implementação ddos seguintes filtros em imagens em tons de cinza</i>
+<i>Implementação ddos seguintes filtros em imagens em tons de cinza:</i>
 
 	Média;
 	Moda;
