@@ -6,8 +6,8 @@
 #define MAX 131					/* numero maximo de ponto */
 #define w1 0.3					/* ponderacao para o atributo iluminacao */
 #define w2 0.7					/* ponderacao para o atributo largura */
-#define C_TOPOLOGY 8			/* numero de colunas do mapa */
-#define L_TOPOLOGY 8			/* numero de linhas do mapa */
+#define C_TOPOLOGY 16			/* numero de colunas do mapa */
+#define L_TOPOLOGY 16			/* numero de linhas do mapa */
 #define EUCLIDEANDISTANCE(x0,y0,x1,y1) sqrt(w1*pow(x1-x0,2)+w2*pow(y1-y0,2))	/* macro para calculo da distancia euclidiana */
 #define N_ATTRIBUTES 2			/* quantidade de atributos */
 #define T 60					/* numero de iteracoes para treinamento da rede */
@@ -40,6 +40,7 @@ void rateInit(float kohonenMap[L_TOPOLOGY][C_TOPOLOGY][N_ATTRIBUTES], float *lea
 void showKohonenMap(float kohonenMap[L_TOPOLOGY][C_TOPOLOGY][N_ATTRIBUTES]) {
 	int i, j;
 
+	printf("\n");
 	for(i=0; i<L_TOPOLOGY; i++) {
 		for(j=0; j<C_TOPOLOGY; j++)
 			printf(" %f", kohonenMap[i][j][0]);
@@ -86,10 +87,30 @@ void collaborativeFase(float kohonenMap[L_TOPOLOGY][C_TOPOLOGY][N_ATTRIBUTES], i
 		if(i+k < L_TOPOLOGY) {
 			kohonenMap[i+k][j][0] = kohonenMap[i+k][j][0] + (*learningRate * (attVet[0] - kohonenMap[i+k][j][0]));
 			kohonenMap[i+k][j][1] = kohonenMap[i+k][j][1] + (*learningRate * (attVet[1] - kohonenMap[i+k][j][1]));
+
+			if((j+k) < C_TOPOLOGY) {
+				kohonenMap[i+k][j+k][0] = kohonenMap[i+k][j+k][0] + (*learningRate * (attVet[0] - kohonenMap[i+k][j+k][0]));
+				kohonenMap[i+k][j+k][1] = kohonenMap[i+k][j+k][1] + (*learningRate * (attVet[1] - kohonenMap[i+k][j+k][1]));
+			}
+
+			if((j-k) >= 0) {
+				kohonenMap[i+k][j-k][0] = kohonenMap[i+k][j-k][0] + (*learningRate * (attVet[0] - kohonenMap[i+k][j-k][0]));
+				kohonenMap[i+k][j-k][1] = kohonenMap[i+k][j-k][1] + (*learningRate * (attVet[1] - kohonenMap[i+k][j-k][1]));
+			}
 		}
 		if(i-k >= 0) {
 			kohonenMap[i-k][j][0] = kohonenMap[i-k][j][0] + (*learningRate * (attVet[0] - kohonenMap[i-k][j][0]));
 			kohonenMap[i-k][j][1] = kohonenMap[i-k][j][1] + (*learningRate * (attVet[1] - kohonenMap[i-k][j][1]));
+
+			if((j+k) < C_TOPOLOGY) {
+				kohonenMap[i-k][j+k][0] = kohonenMap[i-k][j+k][0] + (*learningRate * (attVet[0] - kohonenMap[i-k][j+k][0]));
+				kohonenMap[i-k][j+k][1] = kohonenMap[i-k][j+k][1] + (*learningRate * (attVet[1] - kohonenMap[i-k][j+k][1]));
+			}
+
+			if((j-k) >= 0) {
+				kohonenMap[i-k][j-k][0] = kohonenMap[i-k][j-k][0] + (*learningRate * (attVet[0] - kohonenMap[i-k][j-k][0]));
+				kohonenMap[i-k][j-k][1] = kohonenMap[i-k][j-k][1] + (*learningRate * (attVet[1] - kohonenMap[i-k][j-k][1]));
+			}
 		}
 		if(j+k < C_TOPOLOGY) {
 			kohonenMap[i][j+k][0] = kohonenMap[i][j+k][0] + (*learningRate * (attVet[0] - kohonenMap[i][j+k][0]));
@@ -189,6 +210,7 @@ void application(float kohonenMap[L_TOPOLOGY][C_TOPOLOGY][N_ATTRIBUTES], float a
 
 void showPoints(float attributesMatrix[MAX][N_ATTRIBUTES], char type[]) {
 	int i, j, flag;
+	printf("\n");
 	for(j=0; j<3; j++) {
 
 		if 		(j==0) 	printf("\nsalmaox = [");

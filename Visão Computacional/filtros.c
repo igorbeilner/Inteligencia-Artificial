@@ -243,7 +243,7 @@ void imread(char *csvFile, unsigned char image[RESOLUCAO][RESOLUCAO]) {
 	FILE 	*F = fopen(csvFile, "rb");
 
 	if(F == NULL)
-		printf("Arquino nao encontrado\n");
+		printf("Arquivo nao encontrado\n");
 
 	while((fgetc (F) != EOF)) {
 		fseek(F, -1, 1);
@@ -281,11 +281,14 @@ int main(int argc, char *argv[]) {
 
 	imread(argv[1], image);
 
-	printf("\n");
+	printf("\nMedia:\n");
 
-	//media(image, 3);
-	//mediana(image, 3);
+	media(image, 3);
+	printf("\nMediana:");
+	mediana(image, 3);
+	printf("\nModa:");
 	moda(image, 3);
+	printf("\n");
 
 	return 0;
 }
