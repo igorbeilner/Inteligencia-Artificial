@@ -315,8 +315,8 @@ void imWrite(char *csvFile, unsigned char image[RESOLUCAO][RESOLUCAO][21], int m
 
 	FILE 	*F = fopen(csvFile, "w+");
 
-	aux[0] = ',';
-	aux[1] = '\n';
+	aux[0] = ','; 	// Fim de coluna no arquivo .csv
+	aux[1] = '\n'; 	// Fim de linha no arquivo .csv
 
 	if(F == NULL)
 		printf("Arquivo nao encontrado\n");
@@ -349,10 +349,9 @@ void imWrite(char *csvFile, unsigned char image[RESOLUCAO][RESOLUCAO][21], int m
 void binariza(unsigned char src[RESOLUCAO][RESOLUCAO][21], unsigned char image[RESOLUCAO][RESOLUCAO][21], int m) {
 	int i, j;
 
-	printf("\nImagem %d:\n", m+1);
 	for(i=0; i<RESOLUCAO; i++) {
 		for(j=0; j<RESOLUCAO; j++) {
-			if(src[i][j][m] < 20)
+			if(src[i][j][m] < 27)
 				image[i][j][m] = 0;
 			else image[i][j][m] = 100;
 		}
@@ -363,14 +362,11 @@ int main(void) {
 	unsigned char src[RESOLUCAO][RESOLUCAO][21];
 	unsigned char baixa[RESOLUCAO][RESOLUCAO][21];
 	unsigned char alta[RESOLUCAO][RESOLUCAO][21];
+	unsigned char bin[RESOLUCAO][RESOLUCAO][21];
 	int i;
 	char fileName[21] = "ImageIrDA/dataxx.csv";
 	char fileNameS[22] = "ImageIrDA/ALTASxx.csv";
 	char fileNameT[22] = "ImageIrDA/BAIXAxx.csv";
-
-	clock_t tempoInicial, tempoFinal;
-	double tempoGasto;
-	tempoInicial = clock();
 
 	for(i=1; i<=20; i++) {
 		fileName[14] = (i/10) + 0x30;		// Itera nos nomes dos arquivos
@@ -382,36 +378,38 @@ int main(void) {
 
 	for(i=0; i<20; i++) {
 
-		mediana(src, baixa, i, 3);
+		mediana(src, baixa, i, 5);
 
 	}
 	//showImage(baixa);
 
 	for(i=0; i<20; i++) {
 
-		laplaciano(baixa, alta, i);
+		binariza(baixa, bin, i);
 
 	}
-	//showImage(src);
+	//showImage(bin);
 
-	for(i=1; i<=20; i++) {
+	for(i=0; i<20; i++) {
+
+		laplaciano(bin, alta, i);
+
+	}
+	showImage(alta);
+
+	for(i=1; i<=20; i++) {					// Salva arquivos das imagens pré processadas
 		fileNameT[15] = (i/10) + 0x30;		// Itera nos nomes dos arquivos
 		fileNameT[16] = (i%10) + 0x30;
 
 		imWrite(fileNameT, baixa, (i-1));
 	}
 
-	for(i=1; i<=20; i++) {
+	for(i=1; i<=20; i++) {					// Salva arquivos das imagens pós processadas
 		fileNameS[15] = (i/10) + 0x30;		// Itera nos nomes dos arquivos
 		fileNameS[16] = (i%10) + 0x30;
 
 		imWrite(fileNameS, alta, (i-1));
 	}
-
-	tempoFinal = clock();
-
-	tempoGasto = ((double)(tempoFinal-tempoInicial)/CLOCKS_PER_SEC)*100;
-	printf("\nTempo: %lf ms\n", tempoGasto);
 
 	return 0;
 }
