@@ -374,7 +374,7 @@ int main(void) {
 
 		imRead(fileName, src, (i-1));
 	}
-	//showImage(src);
+	showImage(src);
 
 	for(i=0; i<20; i++) {
 
@@ -395,7 +395,7 @@ int main(void) {
 		laplaciano(bin, alta, i);
 
 	}
-	showImage(alta);
+	//showImage(alta);
 
 	for(i=1; i<=20; i++) {					// Salva arquivos das imagens pré processadas
 		fileNameT[15] = (i/10) + 0x30;		// Itera nos nomes dos arquivos
